@@ -257,20 +257,17 @@ complex_im(PG_FUNCTION_ARGS)
   PG_RETURN_FLOAT8(result);
 }
 
-/* Complete the following code by filling in the dots (...) 
- * This function returns the conjugate of a complex number
- */
-/*
+//This function returns the conjugate of a complex number
+
 PG_FUNCTION_INFO_V1(complex_conj);
 Datum
 complex_conj(PG_FUNCTION_ARGS)
 {
   Complex *c = PG_GETARG_COMPLEX_P(0);
-  ...
+  Complex *result = complex_make(c->a, -c->b); 
   PG_FREE_IF_COPY(c, 0);
-  PG_RETURN_COMPLEX_P(...);
+  PG_RETURN_COMPLEX_P(result);
 }
-*/
 
 /*****************************************************************************/
 
@@ -315,23 +312,20 @@ complex_left(PG_FUNCTION_ARGS)
   PG_FREE_IF_COPY(d, 1);
   PG_RETURN_BOOL(result);
 }
+//This is the function for the strictly right '>>' operator
 
-/* Complete the following code by filling in the dots (...) 
- * This is the function for the strictly right '>>' operator
- */
-/*
 PG_FUNCTION_INFO_V1(complex_right);
 Datum
 complex_right(PG_FUNCTION_ARGS)
 {
   Complex *c = PG_GETARG_COMPLEX_P(0);
   Complex *d = PG_GETARG_COMPLEX_P(1);
-  ...
+  bool result = FPgt(c->a, d->a);
   PG_FREE_IF_COPY(c, 0);
   PG_FREE_IF_COPY(d, 1);
-  PG_RETURN_BOOL(...);
+  PG_RETURN_BOOL(result);
 }
-*/
+
 
 PG_FUNCTION_INFO_V1(complex_below);
 Datum
@@ -345,17 +339,20 @@ complex_below(PG_FUNCTION_ARGS)
   PG_RETURN_BOOL(result);
 }
 
-/* Write the code for the following function 
- * This is the function for the strictly above '|>>' operator
- */
-/*
+// This is the function for the strictly above '|>>' operator
+
 PG_FUNCTION_INFO_V1(complex_above);
 Datum
 complex_above(PG_FUNCTION_ARGS)
 {
-  ...
+  Complex *c = PG_GETARG_COMPLEX_P(0);
+  Complex *d = PG_GETARG_COMPLEX_P(1);
+  bool result = FPgt(c->b, d->b);
+  PG_FREE_IF_COPY(c, 0);
+  PG_FREE_IF_COPY(d, 1);
+  PG_RETURN_BOOL(result);
 }
-*/
+
 
 /*****************************************************************************/
 
@@ -371,24 +368,33 @@ complex_add(PG_FUNCTION_ARGS)
   PG_RETURN_COMPLEX_P(result);
 }
 
-/* Complete the following code by filling in the dots (...) 
- * This is the function for the subtract '-' operator
- */
-/*
+//This is the function for the subtract '-' operator
+
 PG_FUNCTION_INFO_V1(complex_sub);
 Datum
 complex_sub(PG_FUNCTION_ARGS)
 {
-  ...
+  Complex *c = PG_GETARG_COMPLEX_P(0);
+  Complex *d = PG_GETARG_COMPLEX_P(1);
+  Complex *result = complex_make(c->a - d->a, c->b - d->b);
+  PG_FREE_IF_COPY(c, 0);
+  PG_FREE_IF_COPY(d, 1);
+  PG_RETURN_COMPLEX_P(result);
 }
-*/
 
-/* Write the code for the following function 
- * This is the function for the multiplication '*' operator
- */
-/*
-...
-*/
+
+// This is the function for the multiplication '*' operator
+PG_FUNCTION_INFO_V1(complex_mult);
+Datum
+complex_mult(PG_FUNCTION_ARGS)
+{
+  Complex *c = PG_GETARG_COMPLEX_P(0);
+  Complex *d = PG_GETARG_COMPLEX_P(1);
+  Complex *result = complex_make(c->a * d->a, c->b * d->b);
+  PG_FREE_IF_COPY(c, 0);
+  PG_FREE_IF_COPY(d, 1);
+  PG_RETURN_COMPLEX_P(result);
+}
 
 PG_FUNCTION_INFO_V1(complex_div);
 Datum

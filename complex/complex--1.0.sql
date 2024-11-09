@@ -70,15 +70,12 @@ CREATE FUNCTION im(complex)
   AS 'MODULE_PATHNAME', 'complex_im'
   LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
-/* Complete the following code by filling in the dots (...) 
- * This function returns the conjugate of a complex number
- */
-/*
-CREATE FUNCTION conjugate(...)
-  RETURNS ...
-  AS 'MODULE_PATHNAME', '...'
+-- This function returns the conjugate of a complex number
+
+CREATE FUNCTION conjugate(complex)
+  RETURNS complex
+  AS 'MODULE_PATHNAME', 'complex_conj'
   LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
-*/
 
 /******************************************************************************
  * Operators
@@ -97,27 +94,23 @@ CREATE FUNCTION complex_left(complex, complex)
   AS 'MODULE_PATHNAME', 'complex_left'
   LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
-/* Complete the following code by filling in the dots (...) 
- * This is the function for the strictly right '>>' operator
- */
-/*
-CREATE FUNCTION complex_right(...)
-  RETURNS ...
-  AS 'MODULE_PATHNAME', '...'
+-- This is the function for the strictly right '>>' operator
+
+CREATE FUNCTION complex_right(complex, complex)
+  RETURNS boolean
+  AS 'MODULE_PATHNAME', 'complex_right'
   LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
-*/
 
 CREATE FUNCTION complex_below(complex, complex)
   RETURNS boolean
   AS 'MODULE_PATHNAME', 'complex_below'
   LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
-/* Write the code for the following function 
- * This is the function for the strictly above '|>>' operator
- */
-/*
-CREATE FUNCTION ...
-*/
+--This is the function for the strictly above '|>>' operator
+CREATE FUNCTION complex_above(complex, complex)
+  RETURNS boolean
+  AS 'MODULE_PATHNAME', 'complex_above'
+  LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
 CREATE OPERATOR ~= (
   LEFTARG = complex, RIGHTARG = complex,
@@ -135,16 +128,13 @@ CREATE OPERATOR << (
   COMMUTATOR = >>
 );
 
-/* Complete the following code by filling in the dots (...) 
- * This is the strictly right '>>' operator
- */
-/*
+--This is the strictly right '>>' operator
+
 CREATE OPERATOR >> (
-  LEFTARG = ..., RIGHTARG = ...,
-  PROCEDURE = ...,
-  COMMUTATOR = ...
+  LEFTARG = complex, RIGHTARG = complex,
+  PROCEDURE = complex_right,
+  COMMUTATOR = <<
 );
-*/
 
 CREATE OPERATOR <<| (
   LEFTARG = complex, RIGHTARG = complex,
@@ -152,12 +142,12 @@ CREATE OPERATOR <<| (
   COMMUTATOR = |>>
 );
 
-/* Write the code for the following operator 
- * This is the strictly above '|>>' operator
- */
-/*
-CREATE OPERATOR ...
-*/
+-- This is the strictly above '|>>' operator
+CREATE OPERATOR |>> (
+  LEFTARG = complex, RIGHTARG = complex,
+  PROCEDURE = complex_below,
+  COMMUTATOR = <<|
+);
 
 /******************************************************************************/
 
@@ -166,22 +156,20 @@ CREATE FUNCTION complex_add(complex, complex)
   AS 'MODULE_PATHNAME', 'complex_add'
   LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
 
-/* Complete the following code by filling in the dots (...) 
- * This is the function for the subtract '-' operator
- */
-/*
-CREATE FUNCTION complex_sub(...)
-  RETURNS ...
-  AS 'MODULE_PATHNAME', '...'
-  LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
-*/
+-- This is the function for the subtract '-' operator
 
-/* Write the code for the following function 
- * This is the function for the multiplication '*' operator
- */
-/*
-CREATE FUNCTION ...
-*/
+CREATE FUNCTION complex_sub(complex,complex)
+  RETURNS complex
+  AS 'MODULE_PATHNAME', 'complex_sub'
+  LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
+
+
+-- This is the function for the multiplication '*' operator
+CREATE FUNCTION complex_mult(complex,complex)
+  RETURNS complex
+  AS 'MODULE_PATHNAME', 'complex_mult'
+  LANGUAGE C IMMUTABLE STRICT PARALLEL SAFE;
+
 
 CREATE FUNCTION complex_div(complex, complex)
   RETURNS complex
@@ -194,22 +182,19 @@ CREATE OPERATOR + (
   COMMUTATOR = +
 );
 
-/* Complete the following code by filling in the dots (...) 
- * This is the subtract '-' operator
- */
-/*
+--This is the subtract '-' operator
 CREATE OPERATOR - (
-  LEFTARG = ..., RIGHTARG = ...,
-  PROCEDURE = ...
+  LEFTARG = complex, RIGHTARG = complex,
+  PROCEDURE = complex_sub
 );
-*/
 
-/* Write the code for the following operator 
- * This is the multiplication '*' operator
- */
-/*
-CREATE OPERATOR ...
-*/
+
+-- This is the multiplication '*' operator
+
+CREATE OPERATOR * (
+  LEFTARG = complex, RIGHTARG = complex,
+  PROCEDURE = complex_mult
+);
 
 CREATE OPERATOR / (
   LEFTARG = complex, RIGHTARG = complex,
